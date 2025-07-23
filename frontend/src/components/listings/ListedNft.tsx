@@ -41,7 +41,7 @@ function ListedNft({
 
         {/* Main card content */}
         <div className="space-y-1 text-sm group-hover:opacity-40 transition-opacity duration-300 z-0 p-4">
-          <p className="text-sm text-white font-light truncate">
+          <p className="text-sm text-white font-medium truncate">
             {name}{" "}
             <span className="text-[#f8c347] text-md font-semibold">
               #{tokenId}
@@ -50,13 +50,23 @@ function ListedNft({
 
           <p className="text-gray-400 text-xs">
             <span>{currentBid == null ? "STARTING BID:" : "CURRENT BID:"}</span>{" "}
-            <span className="text-white">{currentBid ?? minimumBid} ETH</span>
+            <span className="text-green-400 font-semibold">
+              {currentBid ?? minimumBid}
+            </span>{" "}
+            <span className="text-gray-300 font-semibold">ETH</span>
           </p>
         </div>
 
-        {/* Sliding panel that comes from beneath */}
-        <div className="absolute bottom-0 left-0 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out bg-purple-600 py-3 px-4 text-white text-sm font-semibold flex items-center justify-center rounded-b-xl z-10">
-          Place Bid
+        <div
+          className={`absolute bottom-0 left-0 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out py-3 px-4 text-white text-sm font-semibold flex items-center justify-center rounded-b-xl z-10 ${
+            new Date(deadline).getTime() < Date.now()
+              ? "bg-gray-600"
+              : "bg-purple-600"
+          }`}
+        >
+          {new Date(deadline).getTime() < Date.now()
+            ? "Deadline Passed"
+            : "Place Bid"}
         </div>
       </li>
 

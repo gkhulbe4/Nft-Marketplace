@@ -22,12 +22,19 @@ function MyAccount() {
           <span>Connected via {connector.name}</span>
         </div>
       )}
-      <p className="text-xs text-[#00E395] mt-1">
-        {isLoading
-          ? "Loading..."
-          : balance?.formatted
-          ? `${Number(balance.formatted).toFixed(4)} ${balance.symbol}`
-          : "0 ETH"}
+      <p className="text-sm text-gray-300 mt-1">
+        {isLoading ? (
+          "Loading..."
+        ) : balance?.formatted ? (
+          <span className="text-[#00E395] flex gap-1">
+            {Number(balance.formatted).toFixed(4)}
+            <span className="text-gray-300 font-semibold">
+              {balance.symbol}
+            </span>
+          </span>
+        ) : (
+          "0 ETH"
+        )}
       </p>
     </div>
   );

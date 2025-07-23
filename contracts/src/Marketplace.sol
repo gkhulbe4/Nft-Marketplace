@@ -27,15 +27,7 @@ contract Marketplace is Ownable, ReentrancyGuard {
         bool active;
     }
 
-    struct Bid {
-        uint256 amount;
-        address bidder;
-        uint256 timestamp;
-    }
-
     mapping(uint256 => Auction) public auctions;
-    mapping(uint256 => Bid[]) public allBidsForToken;
-    mapping(address => uint256[]) public tokensUserHasBidOn;
 
     event ItemListed(
         address indexed seller,
@@ -70,7 +62,12 @@ contract Marketplace is Ownable, ReentrancyGuard {
             deadline: block.timestamp + durationInSeconds,
             active: true
         });
-        emit ItemListed(msg.sender, tokenId, minimumBid, durationInSeconds);
+        emit ItemListed(
+            msg.sender,
+            tokenId,
+            minimumBid,
+            block.timestamp + durationInSeconds
+        );
     }
 
     function placeBid(uint256 tokenId) public payable nonReentrant {
@@ -88,32 +85,9 @@ contract Marketplace is Ownable, ReentrancyGuard {
             payable(auction.highestBidder).transfer(auction.highestBid);
         }
 
-        Bid memory bid = Bid({
-            amount: bidAmount,
-            bidder: msg.sender,
-            timestamp: block.timestamp
-        });
-
-        allBidsForToken[tokenId].push(bid);
-
-        if (!_hasUserBidOnToken(msg.sender, tokenId)) {
-            tokensUserHasBidOn[msg.sender].push(tokenId);
-        }
-
         emit BidPlaced(msg.sender, tokenId, bidAmount);
         auction.highestBidder = msg.sender;
         auction.highestBid = bidAmount;
-    }
-
-    function _hasUserBidOnToken(
-        address user,
-        uint256 tokenId
-    ) internal view returns (bool) {
-        uint256[] memory tokens = tokensUserHasBidOn[user];
-        for (uint256 i = 0; i < tokens.length; i++) {
-            if (tokens[i] == tokenId) return true;
-        }
-        return false;
     }
 
     function closeAuction(uint256 tokenId) public payable nonReentrant {
@@ -121,6 +95,7 @@ contract Marketplace is Ownable, ReentrancyGuard {
         require(auction.active == true, "Not active");
         require(block.timestamp >= auction.deadline, "Auction not ended");
         require(nftContract.ownerOf(tokenId) == msg.sender, "Not owner of NFT");
+
         auction.active = false;
 
         if (auction.highestBidder != address(0)) {
@@ -130,27 +105,15 @@ contract Marketplace is Ownable, ReentrancyGuard {
                 auction.highestBidder,
                 tokenId
             );
-            Bid[] storage bids = allBidsForToken[tokenId];
-            for (uint256 i = 0; i < bids.length; i++) {
-                _removeTokenFromUser(bids[i].bidder, tokenId);
-            }
-            delete allBidsForToken[tokenId];
+
             emit AuctionClosed(
                 tokenId,
                 auction.highestBidder,
                 auction.highestBid
             );
-        }
-    }
-
-    function _removeTokenFromUser(address user, uint256 tokenId) internal {
-        uint256[] storage tokens = tokensUserHasBidOn[user];
-        for (uint256 i = 0; i < tokens.length; i++) {
-            if (tokens[i] == tokenId) {
-                tokens[i] = tokens[tokens.length - 1];
-                tokens.pop();
-                break;
-            }
+            delete auctions[tokenId];
+        } else {
+            delete auctions[tokenId];
         }
     }
 

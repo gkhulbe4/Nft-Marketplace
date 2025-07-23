@@ -30,30 +30,91 @@ app.post("/create-nft", async (req, res) => {
   }
 });
 
-app.get("/getUserNfts", async (req, res) => {
+app.get("/getUserListedNfts", async (req, res) => {
   try {
     const ownerAddress = req.query.address;
 
-    const nfts = await prisma.nft.findMany({
+    const listedNfts = await prisma.auction.findMany({
+      where: {
+        nft: {
+          owner: {
+            // @ts-expect-error
+            address: ownerAddress,
+          },
+        },
+        transferred: false,
+      },
+      select: {
+        deadline: true,
+        transferred: true,
+        active: true,
+        currentBid: true,
+        highestBidder: true,
+        nft: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            imgUrl: true,
+            tokenId: true,
+          },
+        },
+      },
+    });
+
+    // const nfts = await prisma.nft.findMany({
+    //   where: {
+    //     owner: {
+    //       // @ts-expect-error
+    //       address: ownerAddress,
+    //     },
+    //   },
+    //   orderBy: {
+    //     createdAt: "desc",
+    //   },
+    //   include: {
+    //     auction: {
+    //       select: {
+    //         active: true,
+    //       },
+    //     },
+    //   },
+    // });
+    // console.log(nfts);
+    return res.status(200).json({ message: "success", listedNfts });
+  } catch (error) {
+    console.error("❌ Error saving NFT:", error);
+    return res.status(500).json({ message: "error", error });
+  }
+});
+
+app.get("/getUserCreatedNfts", async (req, res) => {
+  try {
+    const ownerAddress = req.query.address;
+
+    const createdNfts = await prisma.nft.findMany({
       where: {
         owner: {
           // @ts-expect-error
           address: ownerAddress,
         },
+        auction: {
+          is: null,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imgUrl: true,
+        tokenId: true,
       },
       orderBy: {
         createdAt: "desc",
       },
-      include: {
-        auction: {
-          select: {
-            active: true,
-          },
-        },
-      },
     });
-    // console.log(nfts);
-    return res.status(200).json({ message: "success", nfts });
+
+    return res.status(200).json({ message: "success", createdNfts });
   } catch (error) {
     console.error("❌ Error saving NFT:", error);
     return res.status(500).json({ message: "error", error });
@@ -68,6 +129,9 @@ app.get("/getHotListings", async (req, res) => {
           active: true,
           currentBid: {
             not: null,
+          },
+          deadline: {
+            gte: new Date(),
           },
         },
       },
@@ -103,6 +167,9 @@ app.get("/getRecentListings", async (req, res) => {
       where: {
         auction: {
           active: true,
+          deadline: {
+            gte: new Date(),
+          },
         },
       },
       orderBy: {

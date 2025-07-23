@@ -18,14 +18,15 @@ function RecentListings() {
   });
 
   if (isLoading) return <LoadingScreen />;
-  if (isError) return <div>Failed to load Recent Listings</div>;
+  if (isError)
+    return <div className="text-red-500">Failed to load Recent Listings</div>;
   //   console.log(data);
 
   return (
-    <div className="py-4 px-12">
+    <div className="py-4 px-12 h-screen">
       <h2 className="text-2xl font-bold mb-4 text-white">Recent Listings</h2>
       {data.length === 0 ? (
-        <p>No NFTs found.</p>
+        <p className="text-gray-400">No NFTs found.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {data.map((nft: Nft) => (

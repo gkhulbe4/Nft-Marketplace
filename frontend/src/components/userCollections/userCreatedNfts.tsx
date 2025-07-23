@@ -2,21 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAccount } from "wagmi";
 import Nft from "./Nft";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "../LoadingScreen";
 
-function UserNfts() {
+function UserCreatedNfts() {
   const { address } = useAccount();
 
-  const fetchUserNFTs = async () => {
-    const res = await axios.get("http://localhost:3000/getUserNfts", {
+  const fetchUserCreatedNFTs = async () => {
+    const res = await axios.get("http://localhost:3000/getUserCreatedNfts", {
       params: { address },
     });
-    return res.data.nfts;
+    // console.log(res.data.createdNfts);
+    return res.data.createdNfts;
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["userNfts", address],
-    queryFn: fetchUserNFTs,
+    queryKey: ["userCreatedNfts", address],
+    queryFn: fetchUserCreatedNFTs,
     enabled: !!address,
     refetchIntervalInBackground: true,
     refetchOnWindowFocus: true,
@@ -34,32 +35,36 @@ function UserNfts() {
     );
 
   return (
-    <div className="min-h-screen py-4 px-12 mx-12 bg-black">
-      {/* <h2 className="text-white text-xl font-bold mb-4">Your NFTs</h2> */}
+    <div className="h-max py-4 px-12 mx-12 bg-black">
+      <h2 className="text-white text-xl font-bold mb-4">Your NFTs</h2>
       {data.length === 0 ? (
         <p>No NFTs found.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {data.map(
-            (nft: {
+            (createdNfts: {
               id: number;
               name: string;
               description: string;
               imgUrl: string;
               tokenId: number;
-              auction: {
-                active: boolean;
-              };
+              active: boolean;
+              deadline: string;
+              transferred: boolean;
             }) => (
               <Nft
-                key={nft.id}
-                id={nft.id}
-                name={nft.name}
-                description={nft.description}
-                imgUrl={nft.imgUrl}
-                tokenId={nft.tokenId}
-                active={nft?.auction?.active || false}
+                key={createdNfts.id}
+                id={createdNfts.id}
+                name={createdNfts.name}
+                description={createdNfts.description}
+                imgUrl={createdNfts.imgUrl}
+                tokenId={createdNfts.tokenId}
+                active={createdNfts?.active || false}
                 address={address}
+                deadline={createdNfts?.deadline || ""}
+                transferred={createdNfts?.transferred || false}
+                highestBidder={null}
+                currentBid={null}
               />
             )
           )}
@@ -69,4 +74,4 @@ function UserNfts() {
   );
 }
 
-export default UserNfts;
+export default UserCreatedNfts;

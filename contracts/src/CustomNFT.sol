@@ -18,7 +18,7 @@ contract CustomNFT is ERC721URIStorage, Ownable {
 
     constructor(
         address _marketplaceAddress
-    ) ERC721("NFTbro", "NB") Ownable(msg.sender) {
+    ) ERC721("BidVerse", "BV") Ownable(msg.sender) {
         marketplaceAddress = _marketplaceAddress;
     }
 

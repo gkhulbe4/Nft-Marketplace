@@ -18,14 +18,15 @@ function HotListings() {
   });
 
   if (isLoading) return <LoadingScreen />;
-  if (isError) return <div>Failed to load Hot Listings</div>;
+  if (isError)
+    return <div className="text-red-500">Failed to load Hot Listings</div>;
   // console.log(data);
 
   return (
-    <div className="py-4 px-10">
+    <div className="py-4 px-12">
       <h2 className="text-2xl font-bold mb-4 text-white">Hot Listings</h2>
       {data.length === 0 ? (
-        <p>No NFTs found.</p>
+        <p className="text-gray-400">No NFTs found.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {data.map((nft: Nft) => (

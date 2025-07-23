@@ -6,6 +6,7 @@ import CustomNFT from "../lib/abi/CustomNFT.json";
 import { waitForTransactionReceipt } from "viem/actions";
 import { publicClient } from "@/lib/publicClient";
 import { Loader } from "lucide-react";
+import NoWallet from "./NoWallet";
 
 function CreateNft() {
   const [nftInfo, setNftInfo] = useState({ name: "", description: "" });
@@ -15,6 +16,10 @@ function CreateNft() {
 
   const { error, writeContractAsync } = useWriteContract();
   const { address } = useAccount();
+
+  if (address === undefined) {
+    return <NoWallet />;
+  }
 
   async function handleCreateNft() {
     try {
@@ -40,6 +45,9 @@ function CreateNft() {
       console.log("✅ Transaction confirmed:", receipt);
       if (receipt.status === "success") {
         toast.success("NFT created successfully!");
+        setNftInfo({ name: "", description: "" });
+        setImg(null);
+        setPreviewUrl(null);
         return;
       } else {
         toast.error("NFT creation failed!");

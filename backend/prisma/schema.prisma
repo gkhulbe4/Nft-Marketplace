@@ -23,7 +23,7 @@ model Nft {
   description String
   imgUrl      String
   ownerId     Int
-  owner       User     @relation("UserNFTs", fields: [ownerId], references: [id])
+  owner       User     @relation("UserNFTs", fields: [ownerId], references: [id], onDelete: Cascade)
   auction     Auction?
   createdAt   DateTime @default(now())
 
@@ -33,7 +33,7 @@ model Nft {
 model Auction {
   id            Int      @id @default(autoincrement())
   nftId         Int      @unique
-  nft           Nft      @relation(fields: [nftId], references: [id])
+  nft           Nft      @relation(fields: [nftId], references: [id], onDelete: Cascade)
   active        Boolean  @default(true)
   minimumBid    Decimal
   deadline      DateTime
@@ -49,9 +49,9 @@ model Auction {
 model Bid {
   id        Int      @id @default(autoincrement())
   auctionId Int
-  auction   Auction  @relation(fields: [auctionId], references: [id])
+  auction   Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
   bidderId  Int
-  bidder    User     @relation(fields: [bidderId], references: [id])
+  bidder    User     @relation(fields: [bidderId], references: [id], onDelete: Cascade)
   amount    Decimal
   timestamp DateTime @default(now())
 

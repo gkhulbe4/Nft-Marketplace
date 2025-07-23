@@ -29,6 +29,7 @@ export function startMarketplaceListener() {
         deadline: modifiedDeadline,
         minimumBid: Number(minimumBid) / 1e18,
         nftId: nft!.id,
+        transferred: false,
       },
     });
     console.log(list);
@@ -82,6 +83,46 @@ export function startMarketplaceListener() {
       },
     });
     // console.log(storeBid);
+  });
+
+  contract.on("AuctionClosed", async (tokenId, winner, finalPrice) => {
+    console.log("🔥 AuctionClosed event detected:");
+    console.log({ tokenId, winner, finalPrice });
+
+    const tokenIdNum = Number(tokenId);
+
+    try {
+      await prisma.$transaction(async (tx) => {
+        const newOwner = await tx.user.findUnique({
+          where: { address: winner },
+        });
+
+        if (!newOwner) throw new Error("Winner not found in users table");
+
+        const nft = await tx.nft.findUnique({
+          where: { tokenId: tokenIdNum },
+        });
+
+        if (!nft) throw new Error("NFT not found");
+
+        const updatedNft = await tx.nft.update({
+          where: { tokenId: tokenIdNum },
+          data: { ownerId: newOwner.id },
+        });
+
+        const deletedAuction = await tx.auction.delete({
+          where: { nftId: nft.id },
+        });
+
+        await tx.bid.deleteMany({
+          where: { auctionId: deletedAuction.id },
+        });
+      });
+
+      console.log("✅ Auction closed and DB updated successfully");
+    } catch (error) {
+      console.error("❌ Error handling AuctionClosed event:", error);
+    }
   });
 
   console.log("🎧 Marketplace event listener is running...");

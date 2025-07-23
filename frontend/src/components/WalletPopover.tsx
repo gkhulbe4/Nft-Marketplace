@@ -10,7 +10,7 @@ function WalletPopover() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className="text-xs px-4 py-2 bg-[#141414] border border-[#333] text-gray-300 font-light cursor-pointer">
+        <Button className="text-xs px-4 py-2 bg-[#141414] border border-[#333] hover:bg-white/10 hover:border-[#f8c345] text-gray-300 font-light cursor-pointer">
           Connect Wallet
         </Button>
       </PopoverTrigger>

@@ -11,20 +11,24 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { useWriteContract } from "wagmi";
 import Marketplace from "../../lib/abi/Marketplace.json";
+import CustomNFT from "../../lib/abi/CustomNFT.json";
 import { toast } from "sonner";
 import { waitForTransactionReceipt } from "viem/actions";
 import { publicClient } from "@/lib/publicClient";
 import { queryClient } from "@/lib/queryClient";
 import { Loader } from "lucide-react";
+import getTimeRemaining from "@/lib/getTimeRemaining";
 
 function ListDialog({
   tokenId,
   active,
   address,
+  deadline,
 }: {
   tokenId: number;
   active: boolean;
   address: string;
+  deadline: string;
 }) {
   const [listInfo, setListInfo] = useState({
     minimumBid: 0,
@@ -32,36 +36,54 @@ function ListDialog({
     days: 0,
   });
   const [loader, setLoader] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { error, writeContractAsync } = useWriteContract();
 
   async function handleList() {
+    console.log(listInfo.hours);
     if (
       !tokenId ||
       listInfo.minimumBid <= 0 ||
-      listInfo.hours <= 0 ||
-      listInfo.days <= 0
+      (listInfo.hours <= 0 && listInfo.days <= 0)
     ) {
       toast.info("Please enter valid details");
       return;
     }
-    const duration = listInfo.hours * 3600 + listInfo.days * 86400;
+    const duration = Math.floor(listInfo.hours * 3600) + listInfo.days * 86400;
     try {
       setLoader(true);
-      const tx = await writeContractAsync({
+      const approvalTx = await writeContractAsync({
+        address: import.meta.env.VITE_CUSTOM_NFT_ADDRESS,
+        abi: CustomNFT,
+        functionName: "approve",
+        args: [import.meta.env.VITE_MARKETPLACE_ADDRESS, tokenId],
+      });
+      console.log("Approval :", approvalTx);
+
+      await waitForTransactionReceipt(publicClient, {
+        hash: approvalTx,
+      });
+
+      const listingTx = await writeContractAsync({
         address: import.meta.env.VITE_MARKETPLACE_ADDRESS,
         abi: Marketplace,
         functionName: "listItem",
         args: [tokenId, listInfo.minimumBid * 1e18, duration],
       });
       const receipt = await waitForTransactionReceipt(publicClient, {
-        hash: tx,
+        hash: listingTx,
       });
       console.log("✅ Transaction confirmed:", receipt);
       if (receipt.status === "success") {
         toast.success("NFT listed successfully!");
-        queryClient.invalidateQueries({ queryKey: ["userNfts", address] });
+        queryClient.invalidateQueries({
+          queryKey: ["userListedNfts", address],
+        });
         queryClient.invalidateQueries({ queryKey: ["recentListings"] });
+        queryClient.invalidateQueries({
+          queryKey: ["userCreatedNfts", address],
+        });
         return;
       } else {
         toast.error("NFT listing failed!");
@@ -73,13 +95,15 @@ function ListDialog({
       toast.error("Something went wrong");
     } finally {
       setLoader(false);
+      setDialogOpen(false);
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button
+          onClick={() => setDialogOpen(true)}
           disabled={active}
           className={`w-full h-full font-semibold text-sm px-4 rounded ${
             active
@@ -87,7 +111,13 @@ function ListDialog({
               : "bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
           }`}
         >
-          {active ? "Already listed" : "List NFT"}
+          {active ? (
+            <>
+              <p>Ending in {getTimeRemaining(deadline)}</p>
+            </>
+          ) : (
+            "List NFT"
+          )}
         </Button>
       </DialogTrigger>
 

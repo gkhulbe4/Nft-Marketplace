@@ -20,12 +20,15 @@ import { Loader } from "lucide-react";
 function BidDialog({
   tokenId,
   minimumBid,
+  deadline,
 }: {
   tokenId: number;
   minimumBid: number;
+  deadline: string;
 }) {
   const [bidAmount, setBidAmount] = useState(0);
   const [loader, setLoader] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { error, writeContractAsync } = useWriteContract();
 
@@ -66,14 +69,21 @@ function BidDialog({
       toast.error("Something went wrong");
     } finally {
       setLoader(false);
+      setDialogOpen(false);
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full mt-2 font-semibold text-sm py-2 px-4 rounded bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer">
-          Place Bid
+        <Button
+          onClick={() => setDialogOpen(true)}
+          disabled={new Date(deadline).getTime() < Date.now()}
+          className="w-full mt-2 font-semibold text-sm py-2 px-4 rounded bg-purple-600 text-white hover:bg-purple-700 transition cursor-pointer disabled:bg-gray-600 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {new Date(deadline).getTime() < Date.now()
+            ? "Deadline Passed"
+            : "Place Bid"}
         </Button>
       </DialogTrigger>
 

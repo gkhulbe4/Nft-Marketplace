@@ -1,8 +1,15 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+import CurrentBiddings from "../CurrentBiddings";
 import UserNfts from "./UserNfts";
-import CurrentBiddings from "./CurrentBiddings";
+import { useAccount } from "wagmi";
+import NoWallet from "../NoWallet";
 
 function UserCollections() {
+  const { address } = useAccount();
+  if (address === undefined) {
+    return <NoWallet />;
+  }
   return (
     <div className="bg-black w-full min-h-screen py-8 px-4 flex justify-center">
       <Tabs defaultValue="user-nfts" className="w-full max-w-screen">
@@ -22,6 +29,7 @@ function UserCollections() {
         </TabsList>
 
         <TabsContent value="user-nfts" className="mt-6">
+          {/* <UserNfts /> */}
           <UserNfts />
         </TabsContent>
 

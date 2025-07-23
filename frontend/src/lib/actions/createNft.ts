@@ -33,9 +33,9 @@ async function createNft(
   if (!uri) {
     throw new Error("Metadata upload failed");
   }
-  // console.log("Image URL:", imgUrl);
-  // console.log("IPFS URI:", uri);
-  // console.log(`https://${import.meta.env.VITE_PINATA_GATEWAY_URL}/ipfs/${uri}`);
+  console.log("Image URL:", imgUrl);
+  console.log("IPFS URI:", uri);
+  console.log(`https://${import.meta.env.VITE_PINATA_GATEWAY_URL}/ipfs/${uri}`);
 
   return {
     imgUrl: imgUrl,

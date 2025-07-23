@@ -98,10 +98,18 @@ function BidDrawer({
                         {currentBid ? `${currentBid} ETH` : "N/A"}
                       </p>
                       <p className="text-[10px] border border-gray-600 px-2 py-1 rounded-md h-max">
-                        ENDING IN{" "}
-                        <span className="text-[#f8c347]">
-                          {getTimeRemaining(deadline)}
-                        </span>
+                        {new Date(deadline).getTime() < Date.now() ? (
+                          <span className="text-red-500 font-semibold">
+                            Expired
+                          </span>
+                        ) : (
+                          <>
+                            ENDING IN{" "}
+                            <span className="text-[#f8c347]">
+                              {getTimeRemaining(deadline)}
+                            </span>
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -109,6 +117,7 @@ function BidDrawer({
                   <BidDialog
                     tokenId={tokenId}
                     minimumBid={currentBid ? currentBid : minimumBid}
+                    deadline={deadline}
                   />
                 </div>
               </div>
