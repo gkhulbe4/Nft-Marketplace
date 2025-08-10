@@ -4,6 +4,10 @@ A full-stack decentralized application (DApp) that lets users **mint NFTs**, **l
 
 ---
 
+## Project video -> https://www.linkedin.com/feed/update/urn:li:activity:7353864784766816259/
+
+---
+
 ## ✨ Features
 
 - 🔨 **Mint NFTs** (ERC-721) with metadata and image stored on **IPFS**
@@ -37,6 +41,3 @@ A full-stack decentralized application (DApp) that lets users **mint NFTs**, **l
 - **Alchemy WebSocket** for listening to contract events
 - Ethers.js for decoding and handling event logs
 
----
-
-## 📁 Project Structure
