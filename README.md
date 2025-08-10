@@ -4,7 +4,7 @@ A full-stack decentralized application (DApp) that lets users **mint NFTs**, **l
 
 ---
 
-## Project video -> https://www.linkedin.com/feed/update/urn:li:activity:7353864784766816259/
+## Project video :- https://www.linkedin.com/feed/update/urn:li:activity:7353864784766816259/
 
 ---
 
