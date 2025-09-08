@@ -3,9 +3,9 @@ import "dotenv/config";
 import Marketplace from "../abi/Marketplace.json";
 import provider from "../provider";
 import { prisma } from "../prisma";
-import { PrismaClient } from "../../../generated/prisma";
+import { Prisma, PrismaClient } from "@prisma/client";
 
-type TxClient = Parameters<Parameters<PrismaClient["$transaction"]>[0]>[0];
+type TxClient = Prisma.TransactionClient;
 
 export function startMarketplaceListener() {
   const contractAddress = process.env.MARKETPLACE_ADDRESS!;
