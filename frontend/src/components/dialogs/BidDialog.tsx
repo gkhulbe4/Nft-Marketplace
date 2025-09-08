@@ -23,7 +23,7 @@ function BidDialog({
   deadline,
 }: {
   tokenId: number;
-  minimumBid: number;
+  minimumBid: string;
   deadline: string;
 }) {
   const [bidAmount, setBidAmount] = useState(0);
@@ -37,7 +37,7 @@ function BidDialog({
       toast.info("Please enter a valid bid amount");
       return;
     }
-    if (bidAmount <= minimumBid) {
+    if (bidAmount <= parseFloat(minimumBid)) {
       toast.info(`Bid amount must be greater than ${minimumBid} ETH`);
       return;
     }

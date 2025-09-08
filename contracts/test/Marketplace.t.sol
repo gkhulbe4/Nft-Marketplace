@@ -22,18 +22,12 @@ contract MarketplaceTest is Test {
         vm.startPrank(user1);
         vm.deal(user1, 10 ether);
         uint256 tokenId = c.createNFT(
-            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64"
+            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64", "sdsd", "bandar", "monkey"
         );
         c.approve(address(m), tokenId);
         m.listItem(tokenId, 1 ether, 60000);
-        (
-            address seller,
-            uint256 minimumBid,
-            address highestBidder,
-            uint256 highestBid,
-            uint256 deadline,
-            bool active
-        ) = m.auctions(tokenId);
+        (address seller, uint256 minimumBid, address highestBidder, uint256 highestBid, uint256 deadline, bool active) =
+            m.auctions(tokenId);
 
         assertEq(seller, user1);
         assertEq(minimumBid, 1 ether);
@@ -55,7 +49,7 @@ contract MarketplaceTest is Test {
         vm.startPrank(user1);
         vm.deal(user1, 10 ether);
         uint256 tokenId = c.createNFT(
-            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64"
+            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64", "sdsd", "bandar", "monkey"
         );
         c.approve(address(m), tokenId);
         m.listItem(tokenId, 1 ether, 60000);
@@ -71,9 +65,7 @@ contract MarketplaceTest is Test {
         m.placeBid{value: 3 ether}(tokenId);
         vm.stopPrank();
 
-        (, , address highestBidder, uint256 highestBid, , ) = m.auctions(
-            tokenId
-        );
+        (,, address highestBidder, uint256 highestBid,,) = m.auctions(tokenId);
 
         console.log("Highest Bidder: %s", highestBidder);
         console.log("Highest Bid: %s", highestBid);
@@ -85,7 +77,7 @@ contract MarketplaceTest is Test {
         vm.startPrank(user1);
         vm.deal(user1, 10 ether);
         uint256 tokenId = c.createNFT(
-            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64"
+            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64", "sdsd", "bandar", "monkey"
         );
         console.log("Old Owner : %s", c.ownerOf(0));
         c.approve(address(m), tokenId);

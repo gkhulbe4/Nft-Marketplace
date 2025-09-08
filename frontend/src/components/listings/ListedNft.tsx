@@ -18,10 +18,10 @@ function ListedNft({
   description: string;
   imgUrl: string;
   tokenId: number;
-  currentBid: number | null;
+  currentBid: string | null;
   highestBidder: string | null;
   deadline: string;
-  minimumBid: number;
+  minimumBid: string;
   createdAt: string;
 }) {
   const [bidDrawerOpen, setBidDrawerOpen] = useState(false);
@@ -39,7 +39,6 @@ function ListedNft({
           className="h-52 w-full object-fill rounded-lg mb-3"
         />
 
-        {/* Main card content */}
         <div className="space-y-1 text-sm group-hover:opacity-40 transition-opacity duration-300 z-0 p-4">
           <p className="text-sm text-white font-medium truncate">
             {name}{" "}

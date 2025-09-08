@@ -29,9 +29,9 @@ function BidDrawer({
   description: string;
   imgUrl: string;
   tokenId: number;
-  currentBid: number | null;
+  currentBid: string | null;
   highestBidder: string | null;
-  minimumBid: number;
+  minimumBid: string;
   createdAt: string;
   deadline: string;
 }) {

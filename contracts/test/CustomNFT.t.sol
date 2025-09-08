@@ -17,7 +17,7 @@ contract CounterTest is Test {
         vm.startPrank(user1);
         vm.deal(user1, 10 ether);
         uint256 tokenId = c.createNFT(
-            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64"
+            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64", "sdsd", "bandar", "monkey"
         );
         console.log(tokenId);
         console.log(c.ownerOf(0));
@@ -28,7 +28,7 @@ contract CounterTest is Test {
         vm.startPrank(user1);
         vm.deal(user1, 10 ether);
         uint256 tokenId = c.createNFT(
-            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64"
+            "ipfs://bafkreifvzz4oppbshehuwua22jab3czyhovyuajahzeavgyb3ilnzktk64", "sdsd", "bandar", "monkey"
         );
         c.transferFrom(user1, user2, tokenId);
         assertEq(c.ownerOf(tokenId), user2);
