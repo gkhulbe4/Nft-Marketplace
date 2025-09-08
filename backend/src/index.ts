@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import { prisma } from "./lib/prisma";
@@ -15,7 +15,7 @@ app.use(express.json());
 startNftListener();
 startMarketplaceListener();
 
-app.post("/create-nft", async (req, res) => {
+app.post("/create-nft", async (req: Request, res: Response) => {
   const { name, description, imgUrl, owner } = req.body;
 
   try {
@@ -30,7 +30,7 @@ app.post("/create-nft", async (req, res) => {
   }
 });
 
-app.get("/getUserListedNfts", async (req, res) => {
+app.get("/getUserListedNfts", async (req: Request, res: Response) => {
   try {
     const ownerAddress = req.query.address;
 
@@ -88,7 +88,7 @@ app.get("/getUserListedNfts", async (req, res) => {
   }
 });
 
-app.get("/getUserCreatedNfts", async (req, res) => {
+app.get("/getUserCreatedNfts", async (req: Request, res: Response) => {
   try {
     const ownerAddress = req.query.address;
 
@@ -121,7 +121,7 @@ app.get("/getUserCreatedNfts", async (req, res) => {
   }
 });
 
-app.get("/getHotListings", async (req, res) => {
+app.get("/getHotListings", async (req: Request, res: Response) => {
   try {
     const hotListings = await prisma.nft.findMany({
       where: {
@@ -161,7 +161,7 @@ app.get("/getHotListings", async (req, res) => {
   }
 });
 
-app.get("/getRecentListings", async (req, res) => {
+app.get("/getRecentListings", async (req: Request, res: Response) => {
   try {
     const recentListings = await prisma.nft.findMany({
       where: {
@@ -198,7 +198,7 @@ app.get("/getRecentListings", async (req, res) => {
   }
 });
 
-app.get("/getCurrentBiddings", async (req, res) => {
+app.get("/getCurrentBiddings", async (req: Request, res: Response) => {
   try {
     const ownerAddress = req.query.address as string;
 
@@ -240,7 +240,7 @@ app.get("/getCurrentBiddings", async (req, res) => {
   }
 });
 
-app.get("/getNftBids", async (req, res) => {
+app.get("/getNftBids", async (req: Request, res: Response) => {
   const tokenId = req.query.tokenId;
   try {
     const bids = await prisma.bid.findMany({
@@ -269,7 +269,7 @@ app.get("/getNftBids", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.status(200).json({ message: "Working" });
 });
 

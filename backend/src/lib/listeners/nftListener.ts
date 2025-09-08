@@ -10,7 +10,13 @@ export function startNftListener() {
 
   contract.on(
     "TokenCreated",
-    async (tokenId, owner, imgUrl, name, description) => {
+    async (
+      tokenId: string,
+      owner: string,
+      imgUrl: string,
+      name: string,
+      description: string
+    ) => {
       console.log("🔥 TokenCreated event detected:");
       console.log({
         tokenId,

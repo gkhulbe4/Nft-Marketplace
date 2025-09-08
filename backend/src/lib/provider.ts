@@ -3,7 +3,7 @@ import "dotenv/config";
 
 const provider = new WebSocketProvider(process.env.WEBSOCKET_URL!);
 
-provider.on("error", (error) => {
+provider.on("error", (error: Error) => {
   console.error("❌ WebSocket Provider Error:", error);
 });
 
