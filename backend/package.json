@@ -24,12 +24,12 @@
     "express": "^5.1.0",
     "nodemon": "^3.1.10",
     "serverless-http": "^4.0.0",
-    "typescript": "^5.8.3"
-  },
-  "devDependencies": {
+    "typescript": "^5.8.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.3.1",
+    "@types/node": "^24.3.1"
+  },
+  "devDependencies": {
     "prisma": "^6.12.0"
   }
 }
