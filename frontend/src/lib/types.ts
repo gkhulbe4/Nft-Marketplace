@@ -5,10 +5,10 @@ export type Nft = {
   imgUrl: string;
   tokenId: number;
   auction: {
-    currentBid: number | null;
+    currentBid: string | null;
     highestBidder: string | null;
     deadline: string;
-    minimumBid: number;
+    minimumBid: string;
     createdAt: string;
   };
 };

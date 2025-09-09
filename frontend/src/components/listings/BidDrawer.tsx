@@ -31,7 +31,7 @@ function BidDrawer({
   tokenId: number;
   currentBid: string | null;
   highestBidder: string | null;
-  minimumBid: string;
+  minimumBid: string | null;
   createdAt: string;
   deadline: string;
 }) {
