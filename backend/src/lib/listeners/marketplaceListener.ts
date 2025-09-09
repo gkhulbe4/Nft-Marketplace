@@ -55,11 +55,21 @@ export function startMarketplaceListener() {
         tokenId,
         amount,
       });
+      let userBidder;
       const user = await prisma.user.findUnique({
         where: {
           address: bidder,
         },
       });
+      userBidder = user;
+      if (!user) {
+        const u = await prisma.user.create({
+          data: {
+            address: bidder,
+          },
+        });
+        userBidder = u;
+      }
 
       const nft = await prisma.nft.findUnique({
         where: {
@@ -72,7 +82,7 @@ export function startMarketplaceListener() {
           nftId: nft!.id,
         },
         data: {
-          highestBidder: user!.address,
+          highestBidder: userBidder!.address,
           currentBid: Number(amount) / 1e18,
         },
       });
@@ -81,7 +91,7 @@ export function startMarketplaceListener() {
       const storeBid = await prisma.bid.upsert({
         where: {
           bidderId_auctionId: {
-            bidderId: user!.id,
+            bidderId: userBidder!.id,
             auctionId: placedBid.id,
           },
         },
@@ -91,7 +101,7 @@ export function startMarketplaceListener() {
         },
         create: {
           amount: Number(amount) / 1e18,
-          bidderId: user!.id,
+          bidderId: userBidder!.id,
           auctionId: placedBid.id,
         },
       });

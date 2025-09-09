@@ -4,7 +4,6 @@ import "dotenv/config";
 import { prisma } from "./lib/prisma";
 import { startNftListener } from "./lib/listeners/nftListener";
 import { startMarketplaceListener } from "./lib/listeners/marketplaceListener";
-import e from "express";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
