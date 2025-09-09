@@ -8,9 +8,12 @@ function CurrentBiddings() {
   const { address } = useAccount();
 
   const fetchCurrentBiddings = async () => {
-    const res = await axios.get("http://localhost:3000/getCurrentBiddings", {
-      params: { address },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getCurrentBiddings`,
+      {
+        params: { address },
+      }
+    );
     // console.log(res.data.bids);
     return res.data.bids;
   };

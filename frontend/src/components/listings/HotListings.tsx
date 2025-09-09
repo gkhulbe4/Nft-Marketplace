@@ -6,7 +6,9 @@ import LoadingScreen from "../LoadingScreen";
 
 function HotListings() {
   const fetchHotListings = async () => {
-    const res = await axios.get("http://localhost:3000/getHotListings");
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getHotListings`
+    );
     return res.data.hotListings;
   };
 

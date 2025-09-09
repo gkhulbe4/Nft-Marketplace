@@ -8,9 +8,12 @@ function UserCreatedNfts() {
   const { address } = useAccount();
 
   const fetchUserCreatedNFTs = async () => {
-    const res = await axios.get("http://localhost:3000/getUserCreatedNfts", {
-      params: { address },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getUserCreatedNfts`,
+      {
+        params: { address },
+      }
+    );
     // console.log(res.data.createdNfts);
     return res.data.createdNfts;
   };

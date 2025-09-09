@@ -6,7 +6,9 @@ import LoadingScreen from "../LoadingScreen";
 
 function RecentListings() {
   const fetchRecentListings = async () => {
-    const res = await axios.get("http://localhost:3000/getRecentListings");
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getRecentListings`
+    );
     return res.data.recentListings;
   };
 

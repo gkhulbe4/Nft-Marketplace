@@ -14,9 +14,12 @@ import { format } from "date-fns";
 
 function BidGraph({ tokenId }: { tokenId: number }) {
   const fetchNftBids = async () => {
-    const res = await axios.get("http://localhost:3000/getNftBids", {
-      params: { tokenId },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getNftBids`,
+      {
+        params: { tokenId },
+      }
+    );
     console.log(res.data.bids);
     return res.data.bids;
   };

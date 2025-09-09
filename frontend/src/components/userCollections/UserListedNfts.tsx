@@ -8,9 +8,12 @@ function UserListedNfts() {
   const { address } = useAccount();
 
   const fetchUserListedNFTs = async () => {
-    const res = await axios.get("http://localhost:3000/getUserListedNfts", {
-      params: { address },
-    });
+    const res = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/getUserListedNfts`,
+      {
+        params: { address },
+      }
+    );
     // console.log(res.data.listedNfts);
     return res.data.listedNfts;
   };
